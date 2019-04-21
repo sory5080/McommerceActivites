@@ -1,9 +1,11 @@
 package com.clientui.controller;
 
 import com.clientui.beans.CommandeBean;
+import com.clientui.beans.ExpeditionBean;
 import com.clientui.beans.PaiementBean;
 import com.clientui.beans.ProductBean;
 import com.clientui.proxies.MicroserviceCommandeProxy;
+import com.clientui.proxies.MicroserviceExpeditionProxy;
 import com.clientui.proxies.MicroservicePaiementProxy;
 import com.clientui.proxies.MicroserviceProduitsProxy;
 import org.slf4j.Logger;
@@ -15,12 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-
 
 @Controller
 public class ClientController {
@@ -33,7 +32,9 @@ public class ClientController {
 
     @Autowired
     private MicroservicePaiementProxy paiementProxy;
-
+    
+    @Autowired
+    private MicroserviceExpeditionProxy expeditionProxy;
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -123,6 +124,20 @@ public class ClientController {
 
         return "confirmation";
     }
+    
+    /**
+     * Opération qui permet de suivre l'état d'une commande.
+     * On passe l'objet "Expedition" récupéré qui contient les détails sur l'expédition de la commande
+     * */
+     @RequestMapping("/suivi/{id}")
+     public String etatExpedition(@PathVariable Long id,  Model model){
+
+         ExpeditionBean expedition = expeditionProxy.findOneExpedition(id).get();
+
+         model.addAttribute("expedition", expedition);
+
+         return "FicheCommande";
+     }
 
     //Génére une serie de 16 chiffres au hasard pour simuler vaguement une CB
     private Long numcarte() {
