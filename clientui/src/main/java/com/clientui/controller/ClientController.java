@@ -4,6 +4,7 @@ import com.clientui.beans.CommandeBean;
 import com.clientui.beans.ExpeditionBean;
 import com.clientui.beans.PaiementBean;
 import com.clientui.beans.ProductBean;
+import com.clientui.exception.ExpeditionNotFoundException;
 import com.clientui.proxies.MicroserviceCommandeProxy;
 import com.clientui.proxies.MicroserviceExpeditionProxy;
 import com.clientui.proxies.MicroservicePaiementProxy;
@@ -132,9 +133,13 @@ public class ClientController {
      @RequestMapping("/suivi/{id}")
      public String etatExpedition(@PathVariable Long id,  Model model){
 
-         ExpeditionBean expedition = expeditionProxy.findOneExpedition(id).get();
+         Optional<ExpeditionBean> expedition = expeditionProxy.findOneExpedition(id);
+         
+         if (!expedition.isPresent()) {
+        	 throw new ExpeditionNotFoundException("L'expédition avec l'id " + id + " n'existe pas !");
+         }
 
-         model.addAttribute("expedition", expedition);
+         model.addAttribute("expedition", expedition.get());
 
          return "FicheCommande";
      }

@@ -35,8 +35,8 @@ public class ExpeditionController {
 	public ResponseEntity<Expedition> newExpedition(@RequestBody Expedition expedition) throws URISyntaxException {
 		
 		//On s'assure que l'expédition reçu est nouvelle avant de l'ajouter
-		if (expedition.getId() == null) {
-			throw new BadRequestExpeditionException("KUne nouvelle expédition ne peut avoir d'id !");
+		if (expedition.getId() != null) {
+			throw new BadRequestExpeditionException("Une nouvelle expédition ne peut avoir d'id !");
 		}
 		Expedition result = expDao.save(expedition);
 		

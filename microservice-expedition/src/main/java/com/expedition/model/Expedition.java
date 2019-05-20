@@ -1,12 +1,13 @@
 package com.expedition.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
 public class Expedition {
 	
-	@Id
+	@Id @GeneratedValue
 	private Long id;
 	private int idCommande;
 	private int etat;
